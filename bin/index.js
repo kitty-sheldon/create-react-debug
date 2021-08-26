@@ -2,6 +2,6 @@
 'use strict';
 
 const { init } = require('./createReactDebug');
-console.log('start creating ...')
 
+// installReactModules('/Users/zhangerjiang/Desktop/cxx/testDebug/test/src/react')
 init();
