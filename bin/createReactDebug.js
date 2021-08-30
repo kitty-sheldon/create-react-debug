@@ -18,6 +18,7 @@ function init() {
         .arguments('<project-directory>')
         .usage(`${chalk.green('<project-directory>')} [options]`)
         .action(name => {
+            // TODO: file exist? delete or not
             projectName = name;
         })
         .parse(process.argv);
@@ -49,19 +50,11 @@ function downLoadReact(name) {
     if (!isCorrectPath) {
         return
     }
-    // const reactPath = path.join(reactAppSrcPath, 'react')
-    // fs.mkdirSync(reactPath);
-    // const isCorrectReact = cdToDirectory(reactPath)
-    // if (!isCorrectReact) {
-    //     return
-    // }
-    // console.log(`React directory: ${reactPath}`);
     const reactAppPackageJson = require(`${reactAppPath}/package.json`);
     const reactVersion = semver.valid(semver.coerce(reactAppPackageJson.dependencies.react))
     console.log('reactVersion', reactAppPackageJson.dependencies.react, reactVersion)
-    // TODO: download
     download(`facebook/react#${reactVersion}`, 'react', err => {
-        console.log('download react', err ? 'error' : 'success')
+        console.log('download react', err ? `error ${err}` : 'success')
         if (!err) {
             const reactPath = path.join(reactAppSrcPath, 'react')
             installReactModules(reactPath)
@@ -84,7 +77,7 @@ function installReactModules(path) {
         console.log(chalk.green('Success: install react modules'))
     }).catch(error => {
         // clearConsole()
-        // console.log(chalk.red(`${error}`))
+        console.log(chalk.red(`${error}`))
         console.log(chalk.red('Fail: install react modules'))
     })
 }
@@ -105,7 +98,16 @@ function build() {
     const childProcess = execa('npm', ['run', 'build-for-devtools'])
     const { stdout } = childProcess
     stdout.pipe(process.stdout)
+    childProcess.then(() => {
+        // clearConsole()
+        console.log(chalk.green('Success: build react'))
+    }).catch(error => {
+        // clearConsole()
+        console.log(chalk.red(`${error}`))
+        console.log(chalk.red('Fail: build react'))
+    })
 }
 
 module.exports.init = init
-// module.exports.installReactModules = installReactModules
+module.exports.installReactModules = installReactModules
+module.exports.build = build
