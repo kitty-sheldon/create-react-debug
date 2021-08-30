@@ -1,6 +1,8 @@
 #! /usr/bin/env node
 'use strict';
 
-const { init } = require('./createReactDebug');
+const { installReactModules } = require('./createReactDebug');
 
-init();
+installReactModules('/Users/zhangerjiang/Desktop/cxx/testDebug/test/src/react')
+// init();
+// build()

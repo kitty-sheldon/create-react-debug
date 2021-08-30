@@ -23,7 +23,6 @@ function init() {
         })
         .parse(process.argv);
     createReactApp(projectName)
-    // TODO
 }
 
 function createReactApp(name) {
@@ -68,7 +67,8 @@ function installReactModules(path) {
     if (!isCorrectPath) {
         return
     }
-    const childProcess = execa('npm', ['install'])
+    //TODO: check yarn
+    const childProcess = execa('yarn')
     const { stdout } = childProcess
     stdout.pipe(process.stdout)
     childProcess.then(() => {
@@ -82,6 +82,43 @@ function installReactModules(path) {
     })
 }
 
+function build() {
+    // TODO: build choices \ link and handle error
+    const childProcess = execa('yarn', ['build', 'react/index', 'react/jsx', 'react-dom/index', 'scheduler', '--type=NODE'])
+    const { stdout } = childProcess
+    stdout.pipe(process.stdout)
+    childProcess.then(() => {
+        // clearConsole()
+        console.log(chalk.green('Success: build react'))
+        const modules = ['react', 'react-dom']
+        modules.forEach(m => linkReactSource(m))
+        linkTo(modules)
+    }).catch(error => {
+        // clearConsole()
+        console.log(chalk.red(`${error}`))
+        console.log(chalk.red('Fail: build react'))
+    })
+}
+
+function linkReactSource(name) {
+    const root = `build/node_modules/${name}`
+    const reactAppPath = path.resolve(root)
+    cdToDirectory(reactAppPath)
+    const isCorrectPath = cdToDirectory(path)
+    if (!isCorrectPath) {
+        console.log(chalk.red(`Error: cannot find ${root}`))
+        return
+    }
+    execa('yarn', ['link'])
+}
+
+function linkTo(modules) {
+    const root = path.resolve(projectName)
+    cdToDirectory(root)
+    execa('yarn', ['link'].concat(modules))
+
+}
+
 function cdToDirectory(dir) {
     const { chdir } = process
     try {
@@ -91,21 +128,6 @@ function cdToDirectory(dir) {
         console.log(chalk.red(`Error: chdir to ${dir} failed `));
         return false
     }
-}
-
-function build() {
-    // TODO: build \ link and handle error
-    const childProcess = execa('npm', ['run', 'build-for-devtools'])
-    const { stdout } = childProcess
-    stdout.pipe(process.stdout)
-    childProcess.then(() => {
-        // clearConsole()
-        console.log(chalk.green('Success: build react'))
-    }).catch(error => {
-        // clearConsole()
-        console.log(chalk.red(`${error}`))
-        console.log(chalk.red('Fail: build react'))
-    })
 }
 
 module.exports.init = init
