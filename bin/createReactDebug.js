@@ -67,7 +67,8 @@ function installReactModules(path) {
         return
     }
     //TODO: check yarn
-    const childProcess = execa('yarn')
+    const childProcess = execa('yarn', ['install'])
+    log(childProcess)
     childProcess.then(() => {
         // clearConsole()
         console.log(chalk.green('Success: install react modules'))
@@ -157,5 +158,3 @@ function cdToDirectory(dir) {
 }
 
 module.exports.init = init
-module.exports.installReactModules = installReactModules
-module.exports.linkModules = linkModules
