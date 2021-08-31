@@ -28,8 +28,7 @@ function init() {
 function createReactApp(name) {
     console.log('start creating react app...')
     const childProcess = execa('npx', ['create-react-app', name])
-    const { stdout } = childProcess
-    stdout.pipe(process.stdout)     // log process
+    log(childProcess)
     childProcess.then(() => {
         clearConsole()
         console.log(chalk.green('Success: create react app'))
@@ -69,12 +68,10 @@ function installReactModules(path) {
     }
     //TODO: check yarn
     const childProcess = execa('yarn')
-    const { stdout } = childProcess
-    stdout.pipe(process.stdout)
     childProcess.then(() => {
         // clearConsole()
-        build()
         console.log(chalk.green('Success: install react modules'))
+        build()
     }).catch(error => {
         // clearConsole()
         console.log(chalk.red(`${error}`))
@@ -85,38 +82,67 @@ function installReactModules(path) {
 function build() {
     // TODO: build choices \ link and handle error
     const childProcess = execa('yarn', ['build', 'react/index', 'react/jsx', 'react-dom/index', 'scheduler', '--type=NODE'])
-    const { stdout } = childProcess
-    stdout.pipe(process.stdout)
+    log(childProcess)
     childProcess.then(() => {
         // clearConsole()
         console.log(chalk.green('Success: build react'))
         const modules = ['react', 'react-dom']
-        modules.forEach(m => linkReactSource(m))
-        linkTo(modules)
+        linkModules(modules, 0)
     }).catch(error => {
         // clearConsole()
-        console.log(chalk.red(`${error}`))
         console.log(chalk.red('Fail: build react'))
+        console.log(chalk.red(`${error}`))
     })
 }
+// cdToDirectory(path.resolve('../../..'))
+// linkReactSource(modules[i])
+//        linkTo(modules)
+// function linkModules() {
+
+// }
 
 function linkReactSource(name) {
     const root = `build/node_modules/${name}`
     const reactAppPath = path.resolve(root)
-    cdToDirectory(reactAppPath)
-    const isCorrectPath = cdToDirectory(path)
+    console.log('reactAppPath', reactAppPath)
+    const isCorrectPath = cdToDirectory(reactAppPath)
     if (!isCorrectPath) {
         console.log(chalk.red(`Error: cannot find ${root}`))
-        return
+        process.exit(1)
     }
-    execa('yarn', ['link'])
+    const childProcess = execa('yarn', ['link'])
+    log(childProcess)
+    return childProcess
+}
+
+function log(pro) {
+    const { stdout } = pro
+    stdout.pipe(process.stdout)
+}
+
+function linkModules(list, index) {
+    const { length } = list
+    if (index >= 0 && index < length) {
+        console.log('index', index)
+        linkReactSource(list[index]).then(data => {
+            cdToDirectory(path.resolve('../../..'))
+            const { stderr } = data
+            if (stderr != null) {
+                console.log(chalk.red(`${stderr}`))
+                // process.exit(1)
+            }
+            linkModules(list, index + 1)
+        })
+    } else {
+        console.log('index', index)
+        linkTo(list)
+    }
 }
 
 function linkTo(modules) {
-    const root = path.resolve(projectName)
+    const root = path.resolve('../..')
     cdToDirectory(root)
     execa('yarn', ['link'].concat(modules))
-
 }
 
 function cdToDirectory(dir) {
@@ -132,4 +158,4 @@ function cdToDirectory(dir) {
 
 module.exports.init = init
 module.exports.installReactModules = installReactModules
-module.exports.build = build
+module.exports.linkModules = linkModules
