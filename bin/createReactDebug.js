@@ -143,7 +143,26 @@ function linkModules(list, index) {
 function linkTo(modules) {
     const root = path.resolve('../..')
     cdToDirectory(root)
-    execa('yarn', ['link'].concat(modules))
+    execa('yarn', ['link'].concat(modules)).then(() => {
+        console.log('starting app...')
+        start()
+    })
+}
+
+function start() {
+    execa('yarn', ['run', 'start']).then((data) => {
+        console.log(chalk.green('Success: start app'))
+    }).catch(err => {
+        if (err.toString().indexOf('yarn add typescript') != -1) {
+            console.log('Start adding typescript...')
+            execa('yarn', ['add', 'typescript']).then(() => {
+                console.log('Restarting app...')
+                start()
+            })
+        } else {
+            console.log(chalk.red('Error: start app'))
+        }
+    })
 }
 
 function cdToDirectory(dir) {
