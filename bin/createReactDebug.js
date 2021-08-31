@@ -70,11 +70,11 @@ function installReactModules(path) {
     const childProcess = execa('yarn', ['install'])
     log(childProcess)
     childProcess.then(() => {
-        // clearConsole()
+        clearConsole()
         console.log(chalk.green('Success: install react modules'))
         build()
     }).catch(error => {
-        // clearConsole()
+        clearConsole()
         console.log(chalk.red(`${error}`))
         console.log(chalk.red('Fail: install react modules'))
     })
@@ -85,22 +85,16 @@ function build() {
     const childProcess = execa('yarn', ['build', 'react/index', 'react/jsx', 'react-dom/index', 'scheduler', '--type=NODE'])
     log(childProcess)
     childProcess.then(() => {
-        // clearConsole()
+        clearConsole()
         console.log(chalk.green('Success: build react'))
         const modules = ['react', 'react-dom']
         linkModules(modules, 0)
     }).catch(error => {
-        // clearConsole()
+        clearConsole()
         console.log(chalk.red('Fail: build react'))
         console.log(chalk.red(`${error}`))
     })
 }
-// cdToDirectory(path.resolve('../../..'))
-// linkReactSource(modules[i])
-//        linkTo(modules)
-// function linkModules() {
-
-// }
 
 function linkReactSource(name) {
     const root = `build/node_modules/${name}`
