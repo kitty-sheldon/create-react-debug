@@ -144,7 +144,9 @@ function linkTo(modules) {
 }
 
 function start() {
-    execa('yarn', ['run', 'start']).then((data) => {
+    const p = execa('yarn', ['run', 'start'])
+    log(p)
+    p.then((data) => {
         console.log(chalk.green('Success: start app'))
     }).catch(err => {
         if (err.toString().indexOf('yarn add typescript') != -1) {
