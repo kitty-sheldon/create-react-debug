@@ -1,5 +1,5 @@
 {
-  "name": "create-react-debug",
+  "name": "@kitty-sheldon/create-react-debug",
   "version": "1.0.0",
   "description": "create debug react source code cli",
   "main": "bin/index.js",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/KittySheldon/create-react-debug.git"
+    "url": "git+https://github.com/kitty-sheldon/create-react-debug.git"
   },
   "keywords": [
     "react",
@@ -20,9 +20,9 @@
   "author": "KittySheldon",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/KittySheldon/create-react-debug/issues"
+    "url": "https://github.com/kitty-sheldon/create-react-debug/issues"
   },
-  "homepage": "https://github.com/KittySheldon/create-react-debug#readme",
+  "homepage": "https://github.com/kitty-sheldon/create-react-debug#readme",
   "dependencies": {
     "chalk": "^4.1.2",
     "commander": "^8.1.0",
