@@ -34,8 +34,5 @@
     "semver": "^7.3.5",
     "tar-pack": "^3.4.1",
     "validate-npm-package-name": "^3.0.0"
-  },
-  "publishConfig": {
-    "@KittySheldon:registry": "https://npm.pkg.github.com"
   }
 }
