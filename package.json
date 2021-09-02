@@ -1,6 +1,6 @@
 {
   "name": "create-react-debug",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "create debug react source code cli",
   "main": "bin/index.js",
   "bin": {
